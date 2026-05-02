@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Her ❤️</title>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.10.2/lottie.min.js"></script>
+
+<style>
+body{
+ margin:0;
+ font-family:sans-serif;
+ background:linear-gradient(135deg,#ff758c,#ff7eb3);
+ color:#fff;
+ text-align:center;
+}
+
+header{
+ position:fixed;
+ top:0;
+ width:100%;
+ background:rgba(0,0,0,0.5);
+ padding:12px;
+ font-size:16px;
+}
+
+.container{
+ margin-top:80px;
+ padding:10px;
+}
+
+.day-card{
+ display:none;
+ background:rgba(255,255,255,0.2);
+ margin:15px auto;
+ padding:15px;
+ border-radius:15px;
+ width:95%;
+ max-width:420px;
+ backdrop-filter: blur(10px);
+}
+
+img{
+ width:100%;
+ border-radius:12px;
+}
+
+p{
+ font-size:15px;
+ line-height:1.4;
+}
+
+audio{
+ width:100%;
+ margin-top:10px;
+}
+
+button{
+ padding:10px;
+ border:none;
+ border-radius:10px;
+ background:#ff4e78;
+ color:#fff;
+ margin-top:10px;
+ width:100%;
+}
+
+#lockScreen{
+ position:fixed;
+ inset:0;
+ background:black;
+ display:flex;
+ flex-direction:column;
+ justify-content:center;
+ align-items:center;
+}
+
+#lockScreen input{
+ padding:12px;
+ border-radius:10px;
+ border:none;
+ margin-top:10px;
+ width:80%;
+ max-width:250px;
+}
+
+#birthdayScreen{
+ position:fixed;
+ inset:0;
+ background:black;
+ display:none;
+ flex-direction:column;
+ justify-content:center;
+ align-items:center;
+ padding:20px;
+}
+
+#birthdayScreen h1{
+ font-size:28px;
+}
+
+@media (max-width:480px){
+ header{font-size:14px}
+ #birthdayScreen h1{font-size:24px}
+}
+</style>
+</head>
+<body>
+
+<div id="lockScreen">
+<h2>Enter Password ❤️</h2>
+<input type="password" id="password" placeholder="Enter password">
+<button onclick="unlock()">Unlock</button>
+</div>
+
+<div id="birthdayScreen">
+<h1>Happy Birthday My Love ❤️🎂</h1>
+<p id="finalMessage"></p>
+<div id="lottie"></div>
+</div>
+
+<header>
+<div id="countdown"></div>
+</header>
+
+<div id="tsparticles"></div>
+<div class="container" id="daysContainer"></div>
+
+<script defer>
+
+const YEAR = new Date().getFullYear();
+const correctPassword="titishkalikhe123";
+
+function unlock(){
+ if(document.getElementById("password").value===correctPassword){
+  document.getElementById("lockScreen").style.display="none";
+ } else {
+  alert("Wrong password 💔");
+ }
+}
+
+// COUNTDOWN
+const endDate=new Date(`May 13, ${YEAR}`);
+setInterval(()=>{
+ let now=new Date();
+ let diff=Math.ceil((endDate-now)/(1000*60*60*24));
+ document.getElementById("countdown").innerText= diff>0 ? diff+" days are left ❤️" : "0 days are left ❤️";
+ if(diff<=0){showBirthday();}
+},1000);
+
+// FINAL SCREEN
+function showBirthday(){
+ document.getElementById("birthdayScreen").style.display="flex";
+ document.getElementById("finalMessage").innerText="You are the most beautiful part of my life. Thank you for being you ❤️";
+ confetti({particleCount:200,spread:100});
+}
+
+// DATA
+const daysData=[
+ {date:"May 3",img:"./photo1.jpg",song:"./song1.mp3",msg:"cheers to your personal new year ❤️"},
+ {date:"May 4",img:"./photo2.jpg",song:"./song2.mp3",msg:"May your cake be sweet and life sweeter 🎂"},
+ {date:"May 5",img:"./photo3.jpg",song:"./song3.mp3",msg:"cheers to another trip around the sun 🌞"},
+ {date:"May 6",img:"./photo4.jpg",song:"./song4.mp3",msg:"cheers to your life's annual milestone 💯"},
+ {date:"May 7",img:"./photo5.jpg",song:"./song5.mp3",msg:"another 365 days journey begins enjoy 🥰"},
+ {date:"May 8",img:"./photo6.jpg",song:"./song6.mp3",msg:"happies of day's to you 😁"},
+ {date:"May 9",img:"./photo7.jpg",song:"./song7.mp3",msg:"celebrate your day to the fullest"},
+ {date:"May 10",img:"./photo8.jpg",song:"./song8.mp3",msg:"Toast to another year of blessings 🙌🏻"},
+ {date:"May 11",img:"./photo9.jpg",song:"./song9.mp3",msg:"May today be filled with sunshine and smiles 😊"},
+ {date:"May 12",img:"./photo10.jpg",song:"./song10.mp3",msg:"Here's to another year of you 😝"}
+];
+
+const container=document.getElementById("daysContainer");
+
+function createCards(){
+ let now=new Date();
+ daysData.forEach((day,index)=>{
+  let unlockDate=new Date(`${YEAR}-05-${3+index}T00:00:00`);
+  let card=document.createElement("div");
+  card.className="day-card";
+  if(now>=unlockDate) card.style.display="block";
+
+  card.innerHTML=`
+    <h3>${day.date}</h3>
+    <img src="${day.img}" onerror="this.src='https://via.placeholder.com/400x300?text=Add+Photo'" />
+    <p>${day.msg}</p>
+    <audio controls src="${day.song}"></audio>
+  `;
+
+  container.appendChild(card);
+ });
+}
+
+createCards();
+
+// PARTICLES
+tsParticles.load("tsparticles",{particles:{number:{value:25},move:{enable:true,speed:1}}});
+
+// LOTTIE
+lottie.loadAnimation({container:document.getElementById("lottie"),renderer:"svg",loop:true,autoplay:true,path:"https://assets10.lottiefiles.com/packages/lf20_jcikwtux.json"});
+
+</script>
+
+</body>
+</html>
